@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -11,6 +11,7 @@ import {
   FileText,
   Settings,
   UserCog,
+  User,
   BarChart3,
   Shield,
   Stethoscope,
@@ -18,9 +19,9 @@ import {
   Calendar,
   AlertCircle,
   ChevronLeft,
-  ChevronRight
-} from 'lucide-react';
-import { 
+  ChevronRight,
+} from "lucide-react";
+import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -31,16 +32,10 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
   useSidebar,
-} from '@/components/ui/sidebar';
-import { cn } from '@/lib/utils';
-import type { UserRole } from '@/types';
-
-// Mock current user - in production this would come from auth context
-const currentUser = {
-  role: 'registrar_clerk' as UserRole,
-  name: 'Dr. Kumari Perera',
-  ward: 'W01'
-};
+} from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
+import type { UserRole } from "@/types";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface NavItem {
   title: string;
@@ -52,119 +47,181 @@ interface NavItem {
 
 const navigationItems: NavItem[] = [
   {
-    title: 'Dashboard',
-    url: '/',
+    title: "Dashboard",
+    url: "/",
     icon: LayoutDashboard,
-    roles: ['admin', 'registrar_clerk', 'ward_doctor', 'nurse']
+    roles: ["admin", "registrar_clerk", "ward_doctor", "nurse"],
   },
   {
-    title: 'Register Patient',
-    url: '/patients/register',
+    title: "Register Patient",
+    url: "/patients/register",
     icon: UserPlus,
-    roles: ['registrar_clerk']
+    roles: ["registrar_clerk"],
   },
   {
-    title: 'Patient Search',
-    url: '/patients',
+    title: "Patient Search",
+    url: "/patients",
     icon: Search,
-    roles: ['admin', 'registrar_clerk', 'ward_doctor', 'nurse']
+    roles: ["admin", "registrar_clerk", "ward_doctor", "nurse"],
   },
   {
-    title: 'New Admission',
-    url: '/admissions/new',
+    title: "New Admission",
+    url: "/admissions/new",
     icon: BedDouble,
-    roles: ['registrar_clerk']
+    roles: ["registrar_clerk"],
   },
   {
-    title: 'Current Admissions',
-    url: '/admissions',
+    title: "Current Admissions",
+    url: "/admissions",
     icon: Building2,
-    roles: ['admin', 'registrar_clerk', 'ward_doctor', 'nurse']
+    roles: ["admin", "registrar_clerk", "ward_doctor", "nurse"],
   },
   {
-    title: 'Create Order',
-    url: '/orders/create',
-    icon: ClipboardList,
-    roles: ['ward_doctor']
-  },
-  {
-    title: 'Task Queue',
-    url: '/orders/tasks',
+    title: "Task Queue",
+    url: "/orders/tasks",
     icon: Activity,
-    roles: ['nurse'],
-    badge: '12' // Mock pending tasks
+    roles: ["nurse"],
+    badge: "12", // Mock pending tasks
   },
   {
-    title: 'Medical Records',
-    url: '/records',
+    title: "Medical Records",
+    url: "/records",
     icon: FileText,
-    roles: ['admin', 'ward_doctor', 'nurse']
-  }
+    roles: ["admin", "ward_doctor", "nurse"],
+  },
+];
+
+const userItems: NavItem[] = [
+  {
+    title: "Profile",
+    url: "/profile",
+    icon: User,
+    roles: ["admin", "registrar_clerk", "ward_doctor", "nurse"],
+  },
+  {
+    title: "Settings",
+    url: "/settings",
+    icon: Settings,
+    roles: ["admin"],
+  },
 ];
 
 const adminItems: NavItem[] = [
   {
-    title: 'User Management',
-    url: '/admin/users',
+    title: "User Management",
+    url: "/admin/users",
     icon: UserCog,
-    roles: ['admin']
+    roles: ["admin"],
   },
   {
-    title: 'Ward Management',
-    url: '/admin/wards',
+    title: "Ward Management",
+    url: "/admin/wards",
     icon: Building2,
-    roles: ['admin']
+    roles: ["admin"],
   },
   {
-    title: 'Audit Logs',
-    url: '/admin/audit',
+    title: "Audit Logs",
+    url: "/admin/audit",
     icon: Shield,
-    roles: ['admin']
+    roles: ["admin"],
   },
   {
-    title: 'Reports',
-    url: '/admin/reports',
+    title: "Reports",
+    url: "/admin/reports",
     icon: BarChart3,
-    roles: ['admin']
-  }
+    roles: ["admin"],
+  },
 ];
 
 export function AppSidebar() {
   const { state } = useSidebar();
-  const collapsed = state === 'collapsed';
+  const collapsed = state === "collapsed";
   const location = useLocation();
   const currentPath = location.pathname;
+  const { user } = useAuth();
+
+  // Map login roles to display information
+  const getUserInfo = () => {
+    const role = user?.role;
+    switch (role) {
+      case "admin":
+        return {
+          role: "admin" as UserRole,
+          name: "Administrator",
+          displayName: "System Administrator",
+          ward: undefined,
+        };
+      case "doctor":
+        return {
+          role: "ward_doctor" as UserRole,
+          name: "Dr. " + (user.username || "Doctor"),
+          displayName: "Ward Doctor",
+          ward: "General Ward",
+        };
+      case "nurse":
+        return {
+          role: "nurse" as UserRole,
+          name: "Nurse " + (user.username || "Nurse"),
+          displayName: "Registered Nurse",
+          ward: "General Ward",
+        };
+      case "registrar":
+        return {
+          role: "registrar_clerk" as UserRole,
+          name: user.username || "Registrar",
+          displayName: "Registrar Clerk",
+          ward: "Registration",
+        };
+      default:
+        return {
+          role: "registrar_clerk" as UserRole,
+          name: "User",
+          displayName: "Staff Member",
+          ward: undefined,
+        };
+    }
+  };
+
+  const currentUser = getUserInfo();
 
   const isActive = (path: string) => {
-    if (path === '/') return currentPath === '/';
-    return currentPath.startsWith(path);
+    if (path === "/") return currentPath === "/";
+    return currentPath === path;
   };
 
   const getNavClassName = (path: string) => {
     return isActive(path)
-      ? 'bg-primary/10 text-primary font-medium border-r-2 border-primary'
-      : 'text-muted-foreground hover:bg-muted hover:text-foreground';
+      ? "bg-primary/10 text-primary font-medium border-r-2 border-primary"
+      : "text-muted-foreground hover:bg-muted hover:text-foreground";
   };
 
-  const filteredNavItems = navigationItems.filter(item =>
-    item.roles.includes(currentUser.role)
+  const filteredNavItems = navigationItems.filter((item) =>
+    item.roles.includes(currentUser.role),
   );
 
-  const filteredAdminItems = adminItems.filter(item =>
-    item.roles.includes(currentUser.role)
+  const filteredUserItems = userItems.filter((item) =>
+    item.roles.includes(currentUser.role),
+  );
+
+  const filteredAdminItems = adminItems.filter((item) =>
+    item.roles.includes(currentUser.role),
   );
 
   return (
-    <Sidebar className={cn(
-      'border-r border-border transition-all duration-300',
-      collapsed ? 'w-16' : 'w-64'
-    )}>
+    <Sidebar
+      className={cn(
+        "border-r border-border transition-all duration-300",
+        collapsed ? "w-16" : "w-64",
+      )}
+    >
       <SidebarContent className="p-0">
         {/* Header */}
-        <div className={cn(
-          'flex items-center border-b border-border px-4 py-4',
-          collapsed ? 'justify-center' : 'justify-between'
-        )}>
+        <div
+          className={cn(
+            "flex items-center border-b border-border px-4 py-4",
+            collapsed ? "justify-center" : "justify-between",
+          )}
+        >
           {!collapsed && (
             <div className="flex items-center space-x-2">
               <div className="flex items-center justify-center w-8 h-8 bg-primary rounded-md">
@@ -172,7 +229,9 @@ export function AppSidebar() {
               </div>
               <div>
                 <h2 className="text-sm font-semibold">Karapitiya PRMS</h2>
-                <p className="text-xs text-muted-foreground">Teaching Hospital</p>
+                <p className="text-xs text-muted-foreground">
+                  Teaching Hospital
+                </p>
               </div>
             </div>
           )}
@@ -185,13 +244,18 @@ export function AppSidebar() {
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
                 <span className="text-xs font-medium text-primary">
-                  {currentUser.name.split(' ').map(n => n[0]).join('')}
+                  {currentUser.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{currentUser.name}</p>
-                <p className="text-xs text-muted-foreground capitalize">
-                  {currentUser.role.replace('_', ' ')}
+                <p className="text-sm font-medium truncate">
+                  {currentUser.name}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {currentUser.displayName}
                   {currentUser.ward && ` • ${currentUser.ward}`}
                 </p>
               </div>
@@ -201,7 +265,7 @@ export function AppSidebar() {
 
         {/* Main Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className={collapsed ? 'sr-only' : ''}>
+          <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>
             Main
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -212,8 +276,8 @@ export function AppSidebar() {
                     <NavLink
                       to={item.url}
                       className={cn(
-                        'flex items-center gap-3 px-3 py-2 rounded-md transition-colors',
-                        getNavClassName(item.url)
+                        "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                        getNavClassName(item.url),
                       )}
                     >
                       <item.icon className="h-4 w-4 shrink-0" />
@@ -233,10 +297,41 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
+        {/* User Section */}
+        {filteredUserItems.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>
+              Account
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {filteredUserItems.map((item) => (
+                  <SidebarMenuItem key={item.url}>
+                    <SidebarMenuButton asChild>
+                      <NavLink
+                        to={item.url}
+                        className={cn(
+                          "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                          getNavClassName(item.url),
+                        )}
+                      >
+                        <item.icon className="h-4 w-4 shrink-0" />
+                        {!collapsed && (
+                          <span className="flex-1">{item.title}</span>
+                        )}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
         {/* Admin Section */}
         {filteredAdminItems.length > 0 && (
           <SidebarGroup>
-            <SidebarGroupLabel className={collapsed ? 'sr-only' : ''}>
+            <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>
               Administration
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -247,8 +342,8 @@ export function AppSidebar() {
                       <NavLink
                         to={item.url}
                         className={cn(
-                          'flex items-center gap-3 px-3 py-2 rounded-md transition-colors',
-                          getNavClassName(item.url)
+                          "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                          getNavClassName(item.url),
                         )}
                       >
                         <item.icon className="h-4 w-4 shrink-0" />

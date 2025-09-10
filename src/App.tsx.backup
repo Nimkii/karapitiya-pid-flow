@@ -15,12 +15,7 @@ import NewAdmission from "./pages/NewAdmission";
 import CurrentAdmission from "./pages/CurrentAdmission";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
-import MedicalRecords from "./pages/MedicalRecords";
 import NotFound from "./pages/NotFound";
-import UserManagement from "./pages/admin/UserManagement";
-import WardManagement from "./pages/admin/WardManagement";
-import AuditLogs from "./pages/admin/AuditLogs";
-import Reports from "./pages/admin/Reports";
 
 const queryClient = new QueryClient();
 
@@ -109,56 +104,6 @@ const App = () => (
                 <ProtectedRoute>
                   <MainLayout>
                     <Settings />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/records"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <MedicalRecords />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/users"
-              element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <MainLayout>
-                    <UserManagement />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/wards"
-              element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <MainLayout>
-                    <WardManagement />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/audit"
-              element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <MainLayout>
-                    <AuditLogs />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/reports"
-              element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <MainLayout>
-                    <Reports />
                   </MainLayout>
                 </ProtectedRoute>
               }

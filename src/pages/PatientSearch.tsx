@@ -1,4 +1,5 @@
-import { PatientSearch } from '@/components/patients/PatientSearch';
+import React from "react";
+import { PatientSearch } from "@/components/patients/PatientSearch";
 
 const PatientSearchPage = () => {
   return <PatientSearch />;
