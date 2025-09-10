@@ -143,30 +143,6 @@ const Login = () => {
             )}
 
             <div className="space-y-2">
-              {/* Username Field */}
-              <div>
-                <label
-                  htmlFor="username"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Username or Employee ID
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    id="username"
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Enter your username"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
-
               {/* Role Selection */}
               <div>
                 <label
@@ -206,6 +182,30 @@ const Login = () => {
                       ></path>
                     </svg>
                   </div>
+                </div>
+              </div>
+
+              {/* Username Field */}
+              <div>
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Username or Employee ID
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    id="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Enter your username"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    required
+                    disabled={isLoading}
+                  />
                 </div>
               </div>
 
