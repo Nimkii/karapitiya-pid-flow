@@ -1,73 +1,159 @@
-# Welcome to your Lovable project
+# Karapitiya Teaching Hospital - Patient Records Management System (PRMS)
 
-## Project info
+A comprehensive digital patient records and admission management system designed specifically for Karapitiya Teaching Hospital. This system features a unique Patient ID (PID) generation system and role-based access control for healthcare staff.
 
-**URL**: https://lovable.dev/projects/cf1d9bbc-653a-4193-9127-d593065e2046
+## Features
 
-## How can I edit this code?
+### Core Functionality
+- **Digital Patient Registration**: Complete patient information management with unique PID generation
+- **Admission Management**: Streamlined patient admission and discharge processes
+- **Medical Records**: Comprehensive electronic medical records system
+- **Role-Based Access Control**: Different interfaces for admins, doctors, nurses, and registrar clerks
+- **Real-time Dashboard**: Live updates on patient status, admissions, and critical alerts
 
-There are several ways of editing your application.
+### Unique Patient ID (PID) System
+- **Format**: KTH-YYMM-SSSSS-C (Site-Year-Month-Sequence-CheckDigit)
+- **Example**: KTH-2508-00073-6
+- **Features**:
+  - Mod-11 check digit validation
+  - QR code generation for easy scanning
+  - Hospital-specific prefix (KTH)
+  - Sequential numbering with validation
 
-**Use Lovable**
+### User Roles
+- **Admin**: User management, ward management, audit logs, system reports
+- **Doctor**: Patient management, medical orders, critical patient monitoring
+- **Nurse**: Task management, patient care, vital signs monitoring
+- **Registrar Clerk**: Patient registration, admission processing, PID generation
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/cf1d9bbc-653a-4193-9127-d593065e2046) and start prompting.
+## Technology Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **UI Framework**: shadcn/ui components with Tailwind CSS
+- **Routing**: React Router DOM
+- **State Management**: TanStack Query for server state
+- **Authentication**: Context-based authentication system
+- **Form Handling**: React Hook Form with Zod validation
+- **Charts**: Recharts for data visualization
+- **Icons**: Lucide React
 
-**Use your preferred IDE**
+## Project Structure
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```
+src/
+├── components/
+│   ├── auth/           # Authentication components
+│   ├── dashboard/      # Dashboard and analytics
+│   ├── layout/         # Layout components (sidebar, topbar)
+│   ├── patients/       # Patient management components
+│   ├── pid/           # PID generation and validation
+│   └── ui/            # Reusable UI components
+├── contexts/
+│   └── AuthContext    # Authentication context
+├── hooks/             # Custom React hooks
+├── lib/
+│   └── pid.ts         # PID generation and validation logic
+├── pages/             # Application pages
+│   ├── admin/         # Admin-specific pages
+│   ├── Login.tsx
+│   ├── PatientRegister.tsx
+│   ├── NewAdmission.tsx
+│   └── ...
+└── types/             # TypeScript type definitions
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Getting Started
 
-Follow these steps:
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn package manager
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Installation
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+1. Clone the repository:
+```bash
+git clone https://github.com/Nimkii/karapitiya-pid-flow.git
+cd karapitiya-pid-flow
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+2. Install dependencies:
+```bash
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Start the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+4. Open your browser and navigate to `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Available Scripts
 
-**Use GitHub Codespaces**
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run build:dev` - Build in development mode
+- `npm run lint` - Run ESLint
+- `npm run preview` - Preview production build
+- `npm start` - Start production preview server
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Key Components
 
-## What technologies are used for this project?
+### PID System
+The Patient ID system is the core of this application:
 
-This project is built with:
+- **Generation**: Automatic PID generation with hospital prefix
+- **Validation**: Real-time PID validation with check digit verification
+- **Search**: Quick PID search functionality in the top navigation
+- **QR Codes**: Generate QR codes for easy patient identification
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Dashboard Features
+- **Role-specific KPIs**: Different metrics for each user role
+- **Real-time Activity Feed**: Live updates on system activities
+- **Critical Patient Alerts**: Immediate notifications for urgent cases
+- **Quick Actions**: Role-based quick access buttons
 
-## How can I deploy this project?
+### Patient Management
+- **Registration**: Comprehensive patient information collection
+- **Search & Edit**: Advanced patient search and information updating
+- **Medical Records**: Complete medical history management
+- **Admission Tracking**: Current admissions and patient status
 
-Simply open [Lovable](https://lovable.dev/projects/cf1d9bbc-653a-4193-9127-d593065e2046) and click on Share -> Publish.
+### Admin Features
+- **User Management**: Create and manage system users
+- **Ward Management**: Hospital ward configuration
+- **Audit Logs**: System activity tracking
+- **Reports**: Generate various administrative reports
 
-## Can I connect a custom domain to my Lovable project?
+## Authentication & Security
 
-Yes, you can!
+- Protected routes with role-based access control
+- Secure authentication context
+- Different permission levels for various user roles
+- Audit logging for system activities
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Development Notes
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Code Style
+- TypeScript for type safety
+- ESLint configuration for code quality
+- Tailwind CSS for styling consistency
+- Component-based architecture
+
+### State Management
+- TanStack Query for server state management
+- React Context for authentication state
+- Local state management with React hooks
+
+### Form Validation
+- Zod schemas for runtime type checking
+- React Hook Form for form state management
+- Real-time validation feedback
+
+## Deployment
+
+The application can be deployed using various platforms:
+
+### Using Render (configured)
+The project includes a `render.yaml` configuration file for easy deployment on Render.
