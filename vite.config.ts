@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => ({
   preview: {
     host: "0.0.0.0",
     port: process.env.PORT ? parseInt(process.env.PORT) : 4173,
-    allowedHosts: ["karapitiya-hospital-management-platform.onrender.com"],
+    allowedHosts: ["https://karapitiya-pid-flow.onrender.com"],
   },
   build: {
     outDir: "dist",
